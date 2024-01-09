@@ -1,0 +1,147 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<div class="card">
+    <table width="100%" class="card-body">
+        <tr>
+            <td>
+                <div class="card">
+                    <div class="card-body">
+                        Step 1: Select File<br />
+                        <input type="file" id="uploaded" /><br />
+                        Supported file type: csv, json
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="card">
+                    <div class="card-body">
+                        Step 2: Specify Format<br />
+                        File Type <select>
+                            <option>CSV</option>
+                            <option>JSON</option>
+                        </select>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="card">
+                    <div class="card-body">
+                        Step 3:
+                        Display Handling<br />
+                        Select the fields to be displayed
+                        <div class="row">
+
+                            <div class="card col">
+                                <p class="card-title">Available Fields</p>
+                                <div class="card-body" id="available">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button onclick="right()" class="btn">⏭️</button><br />
+                                <button onclick="left()" class="btn"> ⏮️ </button>
+                            </div>
+
+                            <div class="card col">
+                                <p class="card-title">Fields to be displayed</p>
+                                <div class="card-body">
+                                    <div class="card-body" id="toDisplay">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+    </table>
+    <button type="button" class="btn btn-success" onclick="show()">Next</button><button type="button"
+        class="btn btn-danger">Cancel</button>
+</div>
+<div class="card">
+    <table class="table" id="result">
+    </table>
+</div>
+<script type="text/javascript" defer>
+    let myFile = document.getElementById("uploaded");
+    let available = document.getElementById("available");
+    let toDisplay = document.getElementById("toDisplay");
+    let available_fields = [];
+    let selected_fields = [];
+    let selected = null;
+    available.innerHTML = "";
+    let contents = [];
+    
+    function arrayToSpans(fields) {
+        let res = "";
+        fields.forEach(field => res += `<span id="${field}" onclick=setSelected("${field}")>${field}</span><br/>`);
+        return res;
+    }
+    function handleFileUpload(event) {
+        let fl_files = event.target.files;
+        let fileReader = new FileReader();
+        fileReader.onload = function () {
+            contents = Object.values(JSON.parse(fileReader.result).products);
+            Object.keys(contents[0]).forEach((field) => {
+                available_fields.push(field);
+            });
+            available.innerHTML += arrayToSpans(available_fields);
+        }
+        fileReader.readAsText(fl_files[0]);
+    }
+    function setSelected(field) {
+        if (selected) {
+            selspan = document.getElementById(selected);
+            selspan.style.background = "white";
+        }
+        selected = field;
+        selspan = document.getElementById(selected);
+        selspan.style.background = "yellow";
+    }
+    function right() {
+        available_fields = available_fields.filter(field => field != selected);
+        selected_fields.push(selected);
+        available.innerHTML = arrayToSpans(available_fields);
+        toDisplay.innerHTML = arrayToSpans(selected_fields);
+    }
+    function left() {
+        selected_fields = selected_fields.filter(field => field != selected);
+        available_fields.push(selected);
+        available.innerHTML = arrayToSpans(available_fields);
+        toDisplay.innerHTML = arrayToSpans(selected_fields);
+    }
+
+    function show(){
+        let result = document.getElementById("result");
+        let result_content = "";
+        result_content+=`<thead><tr>`;
+        for(field of selected_fields){
+            result_content+=`<th>${field}</th>`;
+        }
+        result_content+=`</tr></thead><tbody>`;
+        for(product of contents){
+            result_content+=`<tr>`;
+            for(field of selected_fields){
+                result_content+=`<td>${product[field]}</td>`;
+            }
+            result_content+=`</tr>`;
+        }
+        result_content+=`</tbody>`;
+        result.innerHTML+=result_content
+    }
+
+    myFile.addEventListener('change', handleFileUpload, false);
+
+</script>
+
+</html>
