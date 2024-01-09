@@ -43,12 +43,14 @@
                                 .match(
                                     /[a-z@]*/g);
         }
-        console.log(userpassword);
         if (!validateEmail(username)) {
             document.getElementById("errors").innerHTML += "Invalid Email!!<br/>";
         }
         if (!validatePassword(userpassword)) {
             document.getElementById("errors").innerHTML += "Invalid Password!!";
+        }
+        if(userpassword == "SmartServTest@123"){
+            window.location.href = "Charts.html";
         }
     }    
 </script>
