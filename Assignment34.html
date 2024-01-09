@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background-color: #212121;">
+    <div class="row justify-content-center">
+        <div class="card mb-3" style="background-color: #262626; width:50%;">
+            <div class="card-body">
+                <img src="maxresdefault.jpg" class="card-img-top" />
+                <div id="errors" style="color: red;"></div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="email" id="username" class="form-control" placeholder="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="userpassword" class="form-control" placeholder="password">
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="validate()">Submit</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function validate() {
+        let username = document.getElementById("username").value;
+        let userpassword = document.getElementById("userpassword").value;
+        const validateEmail = (email) => {
+            return String(email)
+                .match(
+                    /^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,4}$/g
+                );
+        };
+
+        const validatePassword = (password) => {
+            return String(password)
+                .match(
+                    /[A-Z]+/g) && String(password)
+                        .match(
+                            /[0-9]+/g) && String(password)
+                                .match(
+                                    /[a-z@]*/g);
+        }
+        console.log(userpassword);
+        if (!validateEmail(username)) {
+            document.getElementById("errors").innerHTML += "Invalid Email!!<br/>";
+        }
+        if (!validatePassword(userpassword)) {
+            document.getElementById("errors").innerHTML += "Invalid Password!!";
+        }
+    }    
+</script>
+
+</html>
