@@ -1,0 +1,36 @@
+<html>
+<script>
+    let link = "https://s3.amazonaws.com/open-to-cors/assignment.json";
+
+    async function getapi(url) {
+        const response = await fetch(url);
+        let data = await response.json();
+        let products = [];
+        Object.values(data.products).forEach(product => {
+            products.push(product)
+        });
+        products.sort((a, b) => b.popularity - a.popularity);
+        table = `<tr>
+            <th>Subcategory</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Popularity</th>
+        </tr>`;
+
+        for (let product of products) {
+            let row = `<tr>
+            <td>${product["subcategory"]} </td>
+            <td>${product["title"]}</td>
+            <td>${product["price"]}</td> 
+            <td>${product["popularity"]}</td>
+            </tr>`
+            table += row;
+        }
+        document.getElementById("products").innerHTML = table;
+    }
+    getapi(link);
+</script>
+<table id="products">
+</table>
+
+</html>
