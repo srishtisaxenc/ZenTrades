@@ -92,6 +92,7 @@
         let fileReader = new FileReader();
         fileReader.onload = function () {
             contents = Object.values(JSON.parse(fileReader.result).products);
+            contents.sort((a, b) => b.popularity - a.popularity);
             Object.keys(contents[0]).forEach((field) => {
                 available_fields.push(field);
             });
